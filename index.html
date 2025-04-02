@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Inscrição Estadual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--secondary-color);
+            font-weight: 300;
+        }
+
+        .validator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        input,
+        select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5bef;
+            transform: translateY(-2px);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .result-icon {
+            font-size: 24px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .result-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .valid {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .invalid {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .state-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+        }
+
+        .state-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .state-desc {
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .result-details {
+                flex-direction: column;
+            }
+
+            .validator-form {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Validador de Inscrição Estadual</h1>
+            <p class="subtitle">Verifique a validade de inscrições estaduais de todos os estados brasileiros</p>
+        </header>
+
+        <form id="validatorForm" class="validator-form">
+            <div class="form-group">
+                <label for="uf">Estado (UF)</label>
+                <select id="uf" required>
+                    <option value="">Selecione um estado</option>
+                    <option value="AC">Acre (AC)</option>
+                    <option value="AL">Alagoas (AL)</option>
+                    <option value="AP">Amapá (AP)</option>
+                    <option value="AM">Amazonas (AM)</option>
+                    <option value="BA">Bahia (BA)</option>
+                    <option value="CE">Ceará (CE)</option>
+                    <option value="DF">Distrito Federal (DF)</option>
+                    <option value="ES">Espírito Santo (ES)</option>
+                    <option value="GO">Goiás (GO)</option>
+                    <option value="MA">Maranhão (MA)</option>
+                    <option value="MT">Mato Grosso (MT)</option>
+                    <option value="MS">Mato Grosso do Sul (MS)</option>
+                    <option value="MG">Minas Gerais (MG)</option>
+                    <option value="PA">Pará (PA)</option>
+                    <option value="PB">Paraíba (PB)</option>
+                    <option value="PR">Paraná (PR)</option>
+                    <option value="PE">Pernambuco (PE)</option>
+                    <option value="PI">Piauí (PI)</option>
+                    <option value="RJ">Rio de Janeiro (RJ)</option>
+                    <option value="RN">Rio Grande do Norte (RN)</option>
+                    <option value="RS">Rio Grande do Sul (RS)</option>
+                    <option value="RO">Rondônia (RO)</option>
+                    <option value="RR">Roraima (RR)</option>
+                    <option value="SC">Santa Catarina (SC)</option>
+                    <option value="SP">São Paulo (SP)</option>
+                    <option value="SE">Sergipe (SE)</option>
+                    <option value="TO">Tocantins (TO)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ie">Inscrição Estadual</label>
+                <input type="text" id="ie" placeholder="Digite a Inscrição Estadual" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check-circle"></i> Validar
+            </button>
+        </form>
+
+        <div id="resultContainer" class="result-container">
+            <div class="result-header">
+                <i id="resultIcon" class="result-icon"></i>
+                <h2 id="resultTitle" class="result-title"></h2>
+            </div>
+            <p id="resultMessage"></p>
+
+            <div class="result-details">
+                <div class="detail-item">
+                    <div class="detail-label">Estado</div>
+                    <div id="detailUf" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Inscrição</div>
+                    <div id="detailIe" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Formato</div>
+                    <div id="detailFormat" class="detail-value"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="stateInfo" class="state-info">
+            <div class="state-title">
+                <i class="fas fa-info-circle"></i> Informações sobre o estado selecionado
+            </div>
+            <p id="stateDesc" class="state-desc">Selecione um estado para ver suas regras de validação</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Validador de Inscrição Estadual &copy; 2025 - Todos os direitos reservados</p>
+    </footer>
+
+    <script>
+        // Dados sobre os estados
+        const statesInfo = {
+            'AC': 'Acre - Formato: 13 dígitos, começando com 01. Dígitos verificadores calculados com módulo 11.',
+            'AL': 'Alagoas - Formato: 9 dígitos, começando com 24. Dígito verificador calculado com módulo 11.',
+            'AP': 'Amapá - Formato: 9 dígitos, começando com 03. Dígito verificador calculado com módulo 11.',
+            'AM': 'Amazonas - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'BA': 'Bahia - Formato: 8 ou 9 dígitos. Dois dígitos verificadores com regras especiais.',
+            'CE': 'Ceará - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'DF': 'Distrito Federal - Formato: 13 dígitos, começando com 07. Dígitos verificadores calculados com módulo 11.',
+            'ES': 'Espírito Santo - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'GO': 'Goiás - Formato: 9 dígitos, começando com 10, 11 ou 15. Dígito verificador calculado com módulo 11.',
+            'MA': 'Maranhão - Formato: 9 dígitos, começando com 12. Dígito verificador calculado com módulo 11.',
+            'MT': 'Mato Grosso - Formato: 11 dígitos. Dígito verificador calculado com módulo 11.',
+            'MS': 'Mato Grosso do Sul - Formato: 9 dígitos, começando com 28. Dígito verificador calculado com módulo 11.',
+            'MG': 'Minas Gerais - Formato: 13 dígitos. Dois dígitos verificadores calculados com algoritmo especial.',
+            'PA': 'Pará - Formato: 9 dígitos, começando com 15. Dígito verificador calculado com módulo 11.',
+            'PB': 'Paraíba - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'PR': 'Paraná - Formato: 10 dígitos. Dígito verificador calculado com módulo 11.',
+            'PE': 'Pernambuco - Formato: 9 ou 14 dígitos. Dígito verificador calculado com módulo 11.',
+            'PI': 'Piauí - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'RJ': 'Rio de Janeiro - Formato: 8 dígitos. Dígito verificador calculado com módulo 11.',
+            'RN': 'Rio Grande do Norte - Formato: 9 ou 10 dígitos, começando com 20. Dígito verificador calculado com módulo 11.',
+            'RS': 'Rio Grande do Sul - Formato: 10 dígitos. Dígito verificador calculado com módulo 11.',
+            'RO': 'Rondônia - Formato: 9 ou 14 dígitos. Dígito verificador calculado com módulo 11.',
+            'RR': 'Roraima - Formato: 9 dígitos, começando com 24. Dígito verificador calculado com módulo 9.',
+            'SC': 'Santa Catarina - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'SP': 'São Paulo - Formato: 12 dígitos. Dígito verificador calculado com regras especiais para empresas normais e produtores rurais.',
+            'SE': 'Sergipe - Formato: 9 dígitos. Dígito verificador calculado com módulo 11.',
+            'TO': 'Tocantins - Formato: 9 dígitos, começando com 29. Dígito verificador calculado com módulo 11.'
+        };
+
+        // Atualiza informações do estado quando selecionado
+        document.getElementById('uf').addEventListener('change', function () {
+            const uf = this.value;
+            const stateDesc = document.getElementById('stateDesc');
+
+            if (uf && statesInfo[uf]) {
+                stateDesc.textContent = statesInfo[uf];
+            } else {
+                stateDesc.textContent = 'Selecione um estado para ver suas regras de validação';
+            }
+        });
+
+        // Função principal de validação
+        document.getElementById('validatorForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const uf = document.getElementById('uf').value;
+            let ie = document.getElementById('ie').value;
+
+            if (!uf) {
+                alert('Por favor, selecione um estado.');
+                return;
+            }
+
+            if (!ie) {
+                alert('Por favor, digite a Inscrição Estadual.');
+                return;
+            }
+
+            // Remove caracteres não numéricos
+            ie = ie.replace(/\D/g, '');
+
+            // Valida a IE
+            const isValid = validarIE(ie, uf);
+            showResult(isValid, uf, ie);
+        });
+
+        // Mostra o resultado da validação
+        function showResult(isValid, uf, ie) {
+            const resultContainer = document.getElementById('resultContainer');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            const detailUf = document.getElementById('detailUf');
+            const detailIe = document.getElementById('detailIe');
+            const detailFormat = document.getElementById('detailFormat');
+
+            // Atualiza os elementos com os resultados
+            if (isValid) {
+                resultContainer.className = 'result-container valid';
+                resultIcon.className = 'result-icon fas fa-check-circle';
+                resultTitle.textContent = 'Inscrição Estadual Válida!';
+                resultMessage.textContent = `A Inscrição Estadual ${formatIE(ie, uf)} do estado ${getStateName(uf)} é válida.`;
+            } else {
+                resultContainer.className = 'result-container invalid';
+                resultIcon.className = 'result-icon fas fa-times-circle';
+                resultTitle.textContent = 'Inscrição Estadual Inválida!';
+                resultMessage.textContent = `A Inscrição Estadual informada não é válida para o estado ${getStateName(uf)}. Verifique os dados e tente novamente.`;
+            }
+
+            detailUf.textContent = `${uf} - ${getStateName(uf)}`;
+            detailIe.textContent = formatIE(ie, uf) || ie;
+            detailFormat.textContent = getFormatInfo(uf);
+
+            // Mostra o container de resultados
+            resultContainer.style.display = 'block';
+
+            // Rola a página até o resultado
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Formata a IE de acordo com o estado
+        function formatIE(ie, uf) {
+            if (!ie) return '';
+
+            // Remove todos os caracteres não numéricos
+            ie = ie.replace(/\D/g, '');
+
+            // Aplica formatações específicas por estado
+            switch (uf) {
+                case 'SP': // 110.042.490.114
+                    return ie.replace(/(\d{3})(\d{3})(\d{3})(\d{3})/, '$1.$2.$3.$4');
+                case 'MG': // 062.307.904/0081
+                    return ie.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4');
+                case 'RJ': // 99.999.99-9
+                    return ie.replace(/(\d{2})(\d{3})(\d{2})(\d{1})/, '$1.$2.$3-$4');
+                case 'PR': // 999.99999-99
+                    return ie.replace(/(\d{3})(\d{5})(\d{2})/, '$1.$2-$3');
+                case 'RS': // 999/9999999
+                    return ie.replace(/(\d{3})(\d{7})/, '$1/$2');
+                default:
+                    return ie;
+            }
+        }
+
+        // Retorna o nome completo do estado
+        function getStateName(uf) {
+            const states = {
+                'AC': 'Acre', 'AL': 'Alagoas', 'AP': 'Amapá', 'AM': 'Amazonas',
+                'BA': 'Bahia', 'CE': 'Ceará', 'DF': 'Distrito Federal', 'ES': 'Espírito Santo',
+                'GO': 'Goiás', 'MA': 'Maranhão', 'MT': 'Mato Grosso', 'MS': 'Mato Grosso do Sul',
+                'MG': 'Minas Gerais', 'PA': 'Pará', 'PB': 'Paraíba', 'PR': 'Paraná',
+                'PE': 'Pernambuco', 'PI': 'Piauí', 'RJ': 'Rio de Janeiro', 'RN': 'Rio Grande do Norte',
+                'RS': 'Rio Grande do Sul', 'RO': 'Rondônia', 'RR': 'Roraima', 'SC': 'Santa Catarina',
+                'SP': 'São Paulo', 'SE': 'Sergipe', 'TO': 'Tocantins'
+            };
+            return states[uf] || '';
+        }
+
+        // Retorna informações sobre o formato da IE do estado
+        function getFormatInfo(uf) {
+            const formats = {
+                'AC': '13 dígitos (01.123.456.789-01)',
+                'AL': '9 dígitos (24xxxxxxx)',
+                'AP': '9 dígitos (03xxxxxxx)',
+                'AM': '9 dígitos',
+                'BA': '8 ou 9 dígitos',
+                'CE': '9 dígitos',
+                'DF': '13 dígitos (07.123.456.789-01)',
+                'ES': '9 dígitos',
+                'GO': '9 dígitos (10, 11 ou 15xxxxxx)',
+                'MA': '9 dígitos (12xxxxxxx)',
+                'MT': '11 dígitos',
+                'MS': '9 dígitos (28xxxxxxx)',
+                'MG': '13 dígitos (123.456.789/1234)',
+                'PA': '9 dígitos (15xxxxxxx)',
+                'PB': '9 dígitos',
+                'PR': '10 dígitos (123.45678-90)',
+                'PE': '9 ou 14 dígitos',
+                'PI': '9 dígitos',
+                'RJ': '8 dígitos (12.345.67-8)',
+                'RN': '9 ou 10 dígitos (20xxxxxxx)',
+                'RS': '10 dígitos (123/4567890)',
+                'RO': '9 ou 14 dígitos',
+                'RR': '9 dígitos (24xxxxxxx)',
+                'SC': '9 dígitos',
+                'SP': '12 dígitos (123.456.789.123)',
+                'SE': '9 dígitos',
+                'TO': '9 dígitos (29xxxxxxx)'
+            };
+            return formats[uf] || 'Varia por estado';
+        }
+
+        // ==============================================
+        // FUNÇÕES DE VALIDAÇÃO (as mesmas do código anterior)
+        // ==============================================
+
+        function validarIE(ie, uf) {
+            // Remove caracteres não numéricos
+            ie = ie.replace(/\D/g, '');
+
+            // Converte a UF para maiúsculas
+            uf = uf.toUpperCase();
+
+            // Objeto com as regras de validação por UF
+            const regras = {
+                'AC': { tamanho: 13, inicio: '01', pesos: [4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'AL': { tamanho: 9, inicio: '24', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'AP': { tamanho: 9, inicio: '03', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'AM': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'BA': { tamanho: [8, 9], pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11, digito1: [0, 1, 2, 3, 4, 5, 8], moduloDigito1: 10 },
+                'CE': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'DF': { tamanho: 13, inicio: '07', pesos: [4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'ES': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'GO': { tamanho: 9, inicio: ['10', '11', '15'], pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'MA': { tamanho: 9, inicio: '12', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'MT': { tamanho: 11, pesos: [3, 2, 9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'MS': { tamanho: 9, inicio: '28', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'MG': { tamanho: 13, pesos: [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2], mod: 10, algoritmoEspecial: true },
+                'PA': { tamanho: 9, inicio: '15', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'PB': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'PR': { tamanho: 10, pesos: [3, 2, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'PE': { tamanho: [9, 14], pesos: [8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'PI': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'RJ': { tamanho: 8, pesos: [2, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'RN': { tamanho: [9, 10], inicio: '20', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'RS': { tamanho: 10, pesos: [2, 9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'RO': { tamanho: [9, 14], pesos: [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'RR': { tamanho: 9, inicio: '24', pesos: [1, 2, 3, 4, 5, 6, 7, 8], mod: 9 },
+                'SC': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'SP': { tamanho: 12, pesos: [1, 3, 4, 5, 6, 7, 8, 9, 10], mod: 11, industrialRural: true },
+                'SE': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
+                'TO': { tamanho: 9, inicio: '29', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 }
+            };
+
+            // Verifica se a UF existe no objeto de regras
+            if (!regras[uf]) {
+                return false;
+            }
+
+            const regra = regras[uf];
+
+            // Verifica o início da IE (se houver regra)
+            if (regra.inicio) {
+                const inicios = Array.isArray(regra.inicio) ? regra.inicio : [regra.inicio];
+                const inicioIE = ie.substring(0, 2);
+
+                if (!inicios.some(inicio => inicio === inicioIE)) {
+                    return false;
+                }
+            }
+
+            // Verifica o tamanho da IE
+            if (Array.isArray(regra.tamanho)) {
+                if (!regra.tamanho.includes(ie.length)) {
+                    return false;
+                }
+            } else if (ie.length !== regra.tamanho) {
+                return false;
+            }
+
+            // Algoritmos específicos para alguns estados
+            if (uf === 'MG') {
+                return validarMG(ie);
+            } else if (uf === 'SP') {
+                return validarSP(ie);
+            } else if (uf === 'BA') {
+                return validarBA(ie);
+            }
+
+            // Algoritmo genérico para a maioria dos estados
+            return validarGenerico(ie, regra);
+        }
+
+        function validarGenerico(ie, regra) {
+            const digitos = ie.split('').map(Number);
+            const numDigitos = digitos.length;
+            const dv = digitos[numDigitos - 1];
+            const pesos = regra.pesos;
+
+            let soma = 0;
+            for (let i = 0; i < pesos.length; i++) {
+                soma += digitos[i] * pesos[i];
+            }
+
+            let resto = soma % regra.mod;
+            let dvCalculado;
+
+            if (regra.mod === 11) {
+                if (resto === 0 || resto === 1) {
+                    dvCalculado = 0;
+                } else {
+                    dvCalculado = regra.mod - resto;
+                }
+            } else {
+                dvCalculado = resto === 0 ? 0 : regra.mod - resto;
+            }
+
+            return dv === dvCalculado;
+        }
+
+        function validarMG(ie) {
+            // Remove caracteres não numéricos e garante 13 dígitos
+            ie = ie.replace(/\D/g, '').padStart(13, '0');
+            if (ie.length !== 13) return false;
+
+            // Tenta primeiro com o algoritmo oficial da SEFAZ
+            if (validarMG_SEFAZ(ie)) return true;
+
+            // Se falhar, tenta com o algoritmo alternativo
+            return validarMG_Alternativo(ie);
+        }
+
+        // 1. Algoritmo oficial da SEFAZ/MG (conforme documento)
+        function validarMG_SEFAZ(ie) {
+            const d = ie.split('').map(Number);
+
+            // Cálculo do primeiro dígito (D1)
+            const numD1 = [...d.slice(0, 3), 0, ...d.slice(3, 11)]; // Insere 0 após município
+            const somaD1 = numD1.reduce((total, digito, index) => {
+                const produto = digito * (index % 2 === 0 ? 1 : 2);
+                return total + Math.floor(produto / 10) + (produto % 10);
+            }, 0);
+            const d1 = (Math.ceil(somaD1 / 10) * 10 - somaD1) % 10;
+
+            if (d[11] !== d1) return false;
+
+            // Cálculo do segundo dígito (D2)
+            const pesosD2 = [3, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+            const somaD2 = d.slice(0, 12).reduce((t, dig, i) => t + dig * pesosD2[i], 0);
+            const d2 = somaD2 % 11 <= 1 ? 0 : 11 - (somaD2 % 11);
+
+            return d[12] === d2;
+        }
+
+        // 2. Algoritmo alternativo (encontrado em outros sistemas)
+        function validarMG_Alternativo(ie) {
+            const d = ie.split('').map(Number);
+
+            // Cálculo do primeiro dígito
+            let x1 = d[0] + d[2] + d[3] + d[5] + d[7] + d[9]; // Soma dígitos ímpares
+
+            // Processa dígitos pares (posições 2,5,7,9,11 considerando índice 1 como início)
+            [d[1], d[4], d[6], d[8], d[10]].forEach(digito => {
+                const dx = digito * 2;
+                if (dx < 9) x1 += dx;
+                else if (dx === 10) x1 += 1;
+                else x1 += 1 + (dx - 10); // Soma os dígitos para >9 e ≠10
+            });
+
+            const d1 = (10 - (x1 % 10)) % 10;
+            if (d[11] !== d1) return false;
+
+            // Cálculo do segundo dígito
+            const pesos = [3, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+            const somaD2 = d.slice(0, 11).reduce((s, v, i) => s + v * pesos[i], 0) + d1 * pesos[11];
+            const d2 = somaD2 % 11 <= 1 ? 0 : 11 - (somaD2 % 11);
+
+            return d[12] === d2;
+        }
+
+        function validarSP(ie) {
+            if (ie.length !== 12) return false;
+
+            const digitos = ie.split('').map(Number);
+            const tipo = digitos[8]; // 0 (normal) ou 1 (rural)
+
+            if (tipo === 0) {
+                // Cálculo para empresas normais
+                const pesos = [1, 3, 4, 5, 6, 7, 8, 9, 10];
+                let soma = 0;
+
+                for (let i = 0; i < 8; i++) {
+                    soma += digitos[i] * pesos[i];
+                }
+
+                const resto = soma % 11;
+                const dv = resto < 10 ? resto : 0;
+
+                return digitos[11] === dv;
+            } else if (tipo === 1) {
+                // Cálculo para produtor rural
+                const pesos = [3, 2, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+                let soma = 0;
+
+                for (let i = 0; i < 11; i++) {
+                    soma += digitos[i] * pesos[i];
+                }
+
+                const resto = soma % 11;
+                const dv = resto < 2 ? 0 : 11 - resto;
+
+                return digitos[11] === dv;
+            } else {
+                return false;
+            }
+        }
+
+        function validarBA(ie) {
+            if (ie.length !== 8 && ie.length !== 9) return false;
+
+            const digitos = ie.split('').map(Number);
+            const oitavoDigito = digitos[ie.length === 8 ? 6 : 7]; // Pega o 8º dígito
+
+            // Cálculo do primeiro DV
+            let pesos = [7, 6, 5, 4, 3, 2];
+            let soma = 0;
+
+            for (let i = 0; i < pesos.length; i++) {
+                soma += digitos[i] * pesos[i];
+            }
+
+            let resto, dv1;
+
+            if (oitavoDigito >= 0 && oitavoDigito <= 6) {
+                resto = soma % 10;
+                dv1 = resto === 0 ? 0 : 10 - resto;
+            } else if (oitavoDigito === 7 || oitavoDigito === 8 || oitavoDigito === 9) {
+                resto = soma % 11;
+                dv1 = resto < 2 ? 0 : 11 - resto;
+            } else {
+                return false;
+            }
+
+            if (digitos[ie.length === 8 ? 7 : 8] !== dv1) return false;
+
+            // Cálculo do segundo DV
+            pesos = [8, 7, 6, 5, 4, 3, 2];
+            soma = 0;
+
+            for (let i = 0; i < pesos.length; i++) {
+                soma += digitos[i] * pesos[i];
+            }
+
+            resto = soma % (oitavoDigito <= 6 ? 10 : 11);
+            let dv2;
+
+            if (oitavoDigito <= 6) {
+                dv2 = resto === 0 ? 0 : 10 - resto;
+            } else {
+                dv2 = resto < 2 ? 0 : 11 - resto;
+            }
+
+            return digitos[ie.length === 8 ? 6 : 7] === dv2;
+        }
+    </script>
+</body>
+
+</html>

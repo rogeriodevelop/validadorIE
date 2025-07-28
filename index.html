@@ -7,227 +7,231 @@
     <title>Validador de Inscrição Estadual</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4a6bff;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+   <style>
+    :root {
+        --primary-color: #4a6bff;
+        --secondary-color: #a0a4b8;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --light-color: #2c2f36;
+        --dark-color: #f1f1f1;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #121212;
+        color: var(--dark-color);
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #1e1e2f;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .subtitle {
+        color: var(--secondary-color);
+        font-weight: 300;
+    }
+
+    .validator-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    label {
+        font-weight: 500;
+        color: var(--dark-color);
+    }
+
+    input,
+    select {
+        padding: 12px 15px;
+        background-color: #2c2f36;
+        color: var(--dark-color);
+        border: 1px solid #444;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        transition: var(--transition);
+    }
+
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.4);
+    }
+
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #3a5bef;
+        transform: translateY(-2px);
+    }
+
+    .result-container {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        display: none;
+        animation: fadeIn 0.5s ease;
+        background-color: #1e1e2f;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f7ff;
-            color: var(--dark-color);
-            line-height: 1.6;
-            padding: 20px;
-        }
+    .result-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
 
+    .result-icon {
+        font-size: 24px;
+    }
+
+    .result-title {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .result-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .detail-item {
+        flex: 1;
+        min-width: 150px;
+        padding: 15px;
+        background-color: var(--light-color);
+        border-radius: var(--border-radius);
+    }
+
+    .detail-label {
+        font-size: 14px;
+        color: var(--secondary-color);
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    .valid {
+        background-color: rgba(40, 167, 69, 0.15);
+        border-left: 4px solid var(--success-color);
+    }
+
+    .invalid {
+        background-color: rgba(220, 53, 69, 0.15);
+        border-left: 4px solid var(--danger-color);
+    }
+
+    .state-info {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: var(--light-color);
+        border-radius: var(--border-radius);
+    }
+
+    .state-title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+    }
+
+    .state-desc {
+        font-size: 14px;
+        color: var(--secondary-color);
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 40px;
+        color: var(--secondary-color);
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: var(--secondary-color);
-            font-weight: 300;
-        }
-
-        .validator-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        label {
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-
-        input,
-        select {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #3a5bef;
-            transform: translateY(-2px);
-        }
-
-        .result-container {
-            margin-top: 30px;
             padding: 20px;
-            border-radius: var(--border-radius);
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .result-icon {
-            font-size: 24px;
-        }
-
-        .result-title {
-            font-size: 18px;
-            font-weight: 500;
         }
 
         .result-details {
-            display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+        .validator-form {
             gap: 15px;
-            margin-top: 15px;
         }
+    }
+</style>
 
-        .detail-item {
-            flex: 1;
-            min-width: 150px;
-            padding: 15px;
-            background-color: var(--light-color);
-            border-radius: var(--border-radius);
-        }
-
-        .detail-label {
-            font-size: 14px;
-            color: var(--secondary-color);
-            margin-bottom: 5px;
-        }
-
-        .detail-value {
-            font-weight: 500;
-            font-size: 16px;
-        }
-
-        .valid {
-            background-color: rgba(40, 167, 69, 0.1);
-            border-left: 4px solid var(--success-color);
-        }
-
-        .invalid {
-            background-color: rgba(220, 53, 69, 0.1);
-            border-left: 4px solid var(--danger-color);
-        }
-
-        .state-info {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: var(--light-color);
-            border-radius: var(--border-radius);
-        }
-
-        .state-title {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .state-desc {
-            font-size: 14px;
-            color: var(--secondary-color);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--secondary-color);
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            .result-details {
-                flex-direction: column;
-            }
-
-            .validator-form {
-                gap: 15px;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -314,7 +318,7 @@
     </div>
 
     <footer>
-        <p>Validador de Inscrição Estadual &copy; 2023 - Todos os direitos reservados</p>
+        <p>Validador de Inscrição Estadual &copy; 2025 - Todos os direitos reservados Rogeriosblack</p>
     </footer>
 
     <script>

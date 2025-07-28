@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,7 +76,8 @@
             color: var(--dark-color);
         }
 
-        input, select {
+        input,
+        select {
             padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: var(--border-radius);
@@ -83,7 +85,8 @@
             transition: var(--transition);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
@@ -122,8 +125,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .result-header {
@@ -208,17 +218,18 @@
             .container {
                 padding: 20px;
             }
-            
+
             .result-details {
                 flex-direction: column;
             }
-            
+
             .validator-form {
                 gap: 15px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -277,7 +288,7 @@
                 <h2 id="resultTitle" class="result-title"></h2>
             </div>
             <p id="resultMessage"></p>
-            
+
             <div class="result-details">
                 <div class="detail-item">
                     <div class="detail-label">Estado</div>
@@ -339,10 +350,10 @@
         };
 
         // Atualiza informações do estado quando selecionado
-        document.getElementById('uf').addEventListener('change', function() {
+        document.getElementById('uf').addEventListener('change', function () {
             const uf = this.value;
             const stateDesc = document.getElementById('stateDesc');
-            
+
             if (uf && statesInfo[uf]) {
                 stateDesc.textContent = statesInfo[uf];
             } else {
@@ -351,25 +362,25 @@
         });
 
         // Função principal de validação
-        document.getElementById('validatorForm').addEventListener('submit', function(e) {
+        document.getElementById('validatorForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const uf = document.getElementById('uf').value;
             let ie = document.getElementById('ie').value;
-            
+
             if (!uf) {
                 alert('Por favor, selecione um estado.');
                 return;
             }
-            
+
             if (!ie) {
                 alert('Por favor, digite a Inscrição Estadual.');
                 return;
             }
-            
+
             // Remove caracteres não numéricos
             ie = ie.replace(/\D/g, '');
-            
+
             // Valida a IE
             const isValid = validarIE(ie, uf);
             showResult(isValid, uf, ie);
@@ -384,7 +395,7 @@
             const detailUf = document.getElementById('detailUf');
             const detailIe = document.getElementById('detailIe');
             const detailFormat = document.getElementById('detailFormat');
-            
+
             // Atualiza os elementos com os resultados
             if (isValid) {
                 resultContainer.className = 'result-container valid';
@@ -397,14 +408,14 @@
                 resultTitle.textContent = 'Inscrição Estadual Inválida!';
                 resultMessage.textContent = `A Inscrição Estadual informada não é válida para o estado ${getStateName(uf)}. Verifique os dados e tente novamente.`;
             }
-            
+
             detailUf.textContent = `${uf} - ${getStateName(uf)}`;
             detailIe.textContent = formatIE(ie, uf) || ie;
             detailFormat.textContent = getFormatInfo(uf);
-            
+
             // Mostra o container de resultados
             resultContainer.style.display = 'block';
-            
+
             // Rola a página até o resultado
             resultContainer.scrollIntoView({ behavior: 'smooth' });
         }
@@ -412,10 +423,10 @@
         // Formata a IE de acordo com o estado
         function formatIE(ie, uf) {
             if (!ie) return '';
-            
+
             // Remove todos os caracteres não numéricos
             ie = ie.replace(/\D/g, '');
-            
+
             // Aplica formatações específicas por estado
             switch (uf) {
                 case 'SP': // 110.042.490.114
@@ -498,7 +509,7 @@
                 'AL': { tamanho: 9, inicio: '24', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
                 'AP': { tamanho: 9, inicio: '03', pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
                 'AM': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
-                'BA': { tamanho: [8, 9], pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11, digito1: [0,1,2,3,4,5,8], moduloDigito1: 10 },
+                'BA': { tamanho: [8, 9], pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11, digito1: [0, 1, 2, 3, 4, 5, 8], moduloDigito1: 10 },
                 'CE': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
                 'DF': { tamanho: 13, inicio: '07', pesos: [4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
                 'ES': { tamanho: 9, pesos: [9, 8, 7, 6, 5, 4, 3, 2], mod: 11 },
@@ -534,7 +545,7 @@
             if (regra.inicio) {
                 const inicios = Array.isArray(regra.inicio) ? regra.inicio : [regra.inicio];
                 const inicioIE = ie.substring(0, 2);
-                
+
                 if (!inicios.some(inicio => inicio === inicioIE)) {
                     return false;
                 }
@@ -552,6 +563,8 @@
             // Algoritmos específicos para alguns estados
             if (uf === 'MG') {
                 return validarMG(ie);
+            } else if (uf === 'PE') {
+                return validarPE(ie);
             } else if (uf === 'SP') {
                 return validarSP(ie);
             } else if (uf === 'BA') {
@@ -567,15 +580,15 @@
             const numDigitos = digitos.length;
             const dv = digitos[numDigitos - 1];
             const pesos = regra.pesos;
-            
+
             let soma = 0;
             for (let i = 0; i < pesos.length; i++) {
                 soma += digitos[i] * pesos[i];
             }
-            
+
             let resto = soma % regra.mod;
             let dvCalculado;
-            
+
             if (regra.mod === 11) {
                 if (resto === 0 || resto === 1) {
                     dvCalculado = 0;
@@ -585,7 +598,7 @@
             } else {
                 dvCalculado = resto === 0 ? 0 : regra.mod - resto;
             }
-            
+
             return dv === dvCalculado;
         }
 
@@ -619,6 +632,42 @@
 
             return digitos[12] === dv2;
         }
+
+        function validarPE(ie) {
+            const numeros = ie.replace(/\D/g, '');
+
+            // Formato novo (14 dígitos) com validação por módulo 11
+            if (numeros.length === 14 && numeros.startsWith('18')) {
+                const d = numeros.split('').map(Number);
+
+                const soma = (d[0] * 5) + (d[1] * 4) + (d[2] * 3) + (d[3] * 2) + (d[4] * 1) +
+                    (d[5] * 9) + (d[6] * 8) + (d[7] * 7) + (d[8] * 6) + (d[9] * 5) +
+                    (d[10] * 4) + (d[11] * 3) + (d[12] * 2);
+
+                const resto = soma % 11;
+                let digito = 11 - resto;
+                if (digito >= 10) digito = 0;
+
+                return digito === d[13];
+            }
+
+            // Formato antigo (9 dígitos)
+            if (numeros.length === 9) {
+                const d = numeros.split('').map(Number);
+                const pesos = [8, 7, 6, 5, 4, 3, 2];
+
+                const soma = d.slice(0, 7).reduce((acc, val, i) => acc + val * pesos[i], 0);
+                const resto = soma % 11;
+                let digito = 11 - resto;
+                if (digito >= 10) digito = 0;
+
+                return digito === d[7];
+            }
+
+            return false;
+        }
+
+
 
         function validarSP(ie) {
             if (ie.length !== 12) return false;
@@ -706,4 +755,3 @@
         }
     </script>
 </body>
-</html>

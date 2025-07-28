@@ -314,7 +314,7 @@
     </div>
 
     <footer>
-        <p>Validador de Inscrição Estadual &copy; 2025 - Todos os direitos reservados</p>
+        <p>Validador de Inscrição Estadual &copy; 2023 - Todos os direitos reservados</p>
     </footer>
 
     <script>
@@ -563,6 +563,8 @@
             // Algoritmos específicos para alguns estados
             if (uf === 'MG') {
                 return validarMG(ie);
+            } else if (uf === 'PE') {
+                return validarPE(ie);
             } else if (uf === 'SP') {
                 return validarSP(ie);
             } else if (uf === 'BA') {
@@ -601,63 +603,68 @@
         }
 
         function validarMG(ie) {
-            // Remove caracteres não numéricos e garante 13 dígitos
-            ie = ie.replace(/\D/g, '').padStart(13, '0');
             if (ie.length !== 13) return false;
 
-            // Tenta primeiro com o algoritmo oficial da SEFAZ
-            if (validarMG_SEFAZ(ie)) return true;
+            const digitos = ie.split('').map(Number);
+            const pesos = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2];
+            let soma = 0;
 
-            // Se falhar, tenta com o algoritmo alternativo
-            return validarMG_Alternativo(ie);
+            // Cálculo do primeiro DV (12º dígito)
+            for (let i = 0; i < 11; i++) {
+                const produto = digitos[i] * pesos[i];
+                soma += produto < 10 ? produto : produto - 9;
+            }
+
+            const resto = soma % 10;
+            const dv1 = resto === 0 ? 0 : 10 - resto;
+
+            if (digitos[11] !== dv1) return false;
+
+            // Cálculo do segundo DV (13º dígito)
+            soma = 0;
+            for (let i = 0; i < 12; i++) {
+                const produto = digitos[i] * (i % 2 === 0 ? 1 : 2);
+                soma += produto < 10 ? produto : produto - 9;
+            }
+
+            const resto2 = soma % 10;
+            const dv2 = resto2 === 0 ? 0 : 10 - resto2;
+
+            return digitos[12] === dv2;
         }
 
-        // 1. Algoritmo oficial da SEFAZ/MG (conforme documento)
-        function validarMG_SEFAZ(ie) {
-            const d = ie.split('').map(Number);
+        function validarPE(ie) {
+            const numeros = ie.replace(/\D/g, '');
 
-            // Cálculo do primeiro dígito (D1)
-            const numD1 = [...d.slice(0, 3), 0, ...d.slice(3, 11)]; // Insere 0 após município
-            const somaD1 = numD1.reduce((total, digito, index) => {
-                const produto = digito * (index % 2 === 0 ? 1 : 2);
-                return total + Math.floor(produto / 10) + (produto % 10);
-            }, 0);
-            const d1 = (Math.ceil(somaD1 / 10) * 10 - somaD1) % 10;
+            // Formato novo (14 dígitos) com validação por módulo 11
+            if (numeros.length === 14 && numeros.startsWith('18')) {
+                const d = numeros.split('').map(Number);
 
-            if (d[11] !== d1) return false;
+                const soma = (d[0] * 5) + (d[1] * 4) + (d[2] * 3) + (d[3] * 2) + (d[4] * 1) +
+                    (d[5] * 9) + (d[6] * 8) + (d[7] * 7) + (d[8] * 6) + (d[9] * 5) +
+                    (d[10] * 4) + (d[11] * 3) + (d[12] * 2);
 
-            // Cálculo do segundo dígito (D2)
-            const pesosD2 = [3, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
-            const somaD2 = d.slice(0, 12).reduce((t, dig, i) => t + dig * pesosD2[i], 0);
-            const d2 = somaD2 % 11 <= 1 ? 0 : 11 - (somaD2 % 11);
+                const resto = soma % 11;
+                let digito = 11 - resto;
+                if (digito >= 10) digito = 0;
 
-            return d[12] === d2;
-        }
+                return digito === d[13];
+            }
 
-        // 2. Algoritmo alternativo (encontrado em outros sistemas)
-        function validarMG_Alternativo(ie) {
-            const d = ie.split('').map(Number);
+            // Formato antigo (9 dígitos)
+            if (numeros.length === 9) {
+                const d = numeros.split('').map(Number);
+                const pesos = [8, 7, 6, 5, 4, 3, 2];
 
-            // Cálculo do primeiro dígito
-            let x1 = d[0] + d[2] + d[3] + d[5] + d[7] + d[9]; // Soma dígitos ímpares
+                const soma = d.slice(0, 7).reduce((acc, val, i) => acc + val * pesos[i], 0);
+                const resto = soma % 11;
+                let digito = 11 - resto;
+                if (digito >= 10) digito = 0;
 
-            // Processa dígitos pares (posições 2,5,7,9,11 considerando índice 1 como início)
-            [d[1], d[4], d[6], d[8], d[10]].forEach(digito => {
-                const dx = digito * 2;
-                if (dx < 9) x1 += dx;
-                else if (dx === 10) x1 += 1;
-                else x1 += 1 + (dx - 10); // Soma os dígitos para >9 e ≠10
-            });
+                return digito === d[7];
+            }
 
-            const d1 = (10 - (x1 % 10)) % 10;
-            if (d[11] !== d1) return false;
-
-            // Cálculo do segundo dígito
-            const pesos = [3, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
-            const somaD2 = d.slice(0, 11).reduce((s, v, i) => s + v * pesos[i], 0) + d1 * pesos[11];
-            const d2 = somaD2 % 11 <= 1 ? 0 : 11 - (somaD2 % 11);
-
-            return d[12] === d2;
+            return false;
         }
 
         function validarSP(ie) {
@@ -746,5 +753,3 @@
         }
     </script>
 </body>
-
-</html>
